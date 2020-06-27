@@ -53,3 +53,43 @@ for results_page in range(number_of_results_pages):
 all_offers_dataframe = pd.DataFrame(list_of_all_offer_data)
 
 print("Apartment offerings stored: ", str(all_offers_dataframe.shape[0]))
+
+
+# Optional check for duplicates
+if all_offers_dataframe[all_offers_dataframe.duplicated(['offer_id'])].empty == False:
+    print("Duplicates found")
+else:
+    print("No duplicates found")
+
+
+# TODO:
+#  save files to csv
+# make duplicate check remove duplicates
+# fix mlp regressor
+# add k-fold cross validation
+# increase accuracy
+
+
+from sklearn.model_selection import train_test_split
+
+
+y = all_offers_dataframe['rent']
+X = all_offers_dataframe[['living_space', 'number_rooms']]
+X_train, X_test, Y_train, Y_test = train_test_split(X, y, random_state=0)
+print(X_train.shape, X_test.shape, Y_train.shape, Y_test.shape)
+
+from sklearn import linear_model
+
+
+model = linear_model.LinearRegression().fit(X_train, Y_train)
+print("Training test score: ", str(model.score(X_train, Y_train)))
+print("Test set score: ", str(model.score(X_test, Y_test)))
+
+# Enter the values for the new apartment:
+living_space = 45  # Living space in m²
+number_of_rooms = 2  # Number of rooms
+
+X_new = pd.DataFrame([[living_space, number_of_rooms]])
+
+print("An apartment with " + str(number_of_rooms) + " rooms and " + str(living_space) + " m² costs " + str(
+    model.predict(X_new)[0].round(2)) + " € per month.")

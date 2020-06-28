@@ -21,12 +21,10 @@ if __name__ == '__main__':
 
     if user_input == "1":
         dataframe = webscraper.scrape_data_from_immoscout(verbose=True)
-        user_input = ask_user()
 
     elif user_input == "2":
         X_train, X_test, Y_train, Y_test = price_predictor.prepare_model(verbose=True)
         model = price_predictor.learn_linear_model(X_train, X_test, Y_train, Y_test, verbose=True)
-        user_input = ask_user()
 
     elif user_input == "3":
         rooms = input('How many rooms should the apartment have?\n')

@@ -1,12 +1,14 @@
 # https://realpython.com/beautiful-soup-web-scraper-python/
 
-import time, requests
+import time
+import requests
 from datetime import datetime
 from bs4 import BeautifulSoup
 import pandas as pd
+import os
 
 
-def scrape_data_from_immoscout(verbose=False):
+def scrape_data_from_immoscout(verbose=False, data_dir=os.environ.get('DATA_DIR', '/root')):
     """
     Collect data on apartments from immobilienscout24.de and return the collected data as a Pandas dataframe
     :param verbose: boolean, set True to display console output
@@ -68,8 +70,7 @@ def scrape_data_from_immoscout(verbose=False):
             print("No duplicates found")
 
     # Save dataframe to disk
-    all_offers_dataframe.to_pickle("./apartments_dataframe.pkl")
+    all_offers_dataframe.to_pickle(f"{data_dir}/apartments_dataframe.pkl")
     return all_offers_dataframe
-
 
 

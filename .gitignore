@@ -3,3 +3,4 @@ venv
 *.pkl
 *.joblib
 __pycache__
+.vscode/

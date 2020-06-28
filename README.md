@@ -9,5 +9,5 @@ docker build -t appartment-webscraper .
 ## Run
 
 ```bash
-docker run appartment-webscraper
+docker run -v ~/appartment-webscraper:/root -e DATA_DIR=/root -it appartment-webscraper
 ```

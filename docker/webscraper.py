@@ -68,6 +68,7 @@ else:
 # fix mlp regressor
 # add k-fold cross validation
 # increase accuracy
+# modularize web scraping and the prediction model
 
 
 from sklearn.model_selection import train_test_split

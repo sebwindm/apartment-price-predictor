@@ -70,7 +70,7 @@ def scrape_data_from_immoscout(verbose=False, data_dir=os.environ.get('DATA_DIR'
             print("No duplicates found")
 
     # Save dataframe to disk
-    all_offers_dataframe.to_pickle(f"{data_dir}/apartments_dataframe.pkl")
+    all_offers_dataframe.to_csv(f"{data_dir}/apartments_dataframe.csv")
     return all_offers_dataframe
 
 

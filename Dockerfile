@@ -2,8 +2,10 @@ FROM python:3
 
 WORKDIR /opt
 
-COPY docker/ .
+COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
-CMD ["python", "webscraper.py"]
+COPY docker/ .
+
+CMD ["python", "main.py"]

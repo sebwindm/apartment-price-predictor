@@ -1,5 +1,6 @@
 import pandas as pd
 from joblib import dump, load
+import os
 # from sklearn.ensemble import RandomForestRegressor
 # model = RandomForestRegressor()
 # model.fit(X_train, Y_train)
@@ -25,9 +26,9 @@ from joblib import dump, load
 # print("Test set score: ", str(model.score(X_test_scaled, Y_test)))
 
 
-def prepare_model(verbose=False):
+def prepare_model(verbose=False, data_dir=os.environ.get('DATA_DIR', '/root')):
     from sklearn.model_selection import train_test_split
-    dataframe = pd.read_pickle("./apartments_dataframe.pkl")
+    dataframe = pd.read_pickle(f"{data_dir}/apartments_dataframe.pkl")
 
     y = dataframe['rent']
     X = dataframe[['living_space', 'number_rooms']]
@@ -38,7 +39,7 @@ def prepare_model(verbose=False):
     return X_train, X_test, Y_train, Y_test
 
 
-def learn_linear_model(X_train, X_test, Y_train, Y_test, verbose=False):
+def learn_linear_model(X_train, X_test, Y_train, Y_test, verbose=False, data_dir=os.environ.get('DATA_DIR', '/root')):
     from sklearn import linear_model
 
     model_object = linear_model.LinearRegression().fit(X_train, Y_train)
@@ -46,12 +47,12 @@ def learn_linear_model(X_train, X_test, Y_train, Y_test, verbose=False):
     if verbose is True:
         print("Training set score: ", str(model_object.score(X_train, Y_train)))
         print("Test set score: ", str(model_object.score(X_test, Y_test)))
-    dump(model_object, './apartment_model.joblib')
+    dump(model_object, f'{data_dir}/apartment_model.joblib')
     return
 
 
-def predict_apartment_price(living_space, number_of_rooms, verbose=False):
-    model_object = load('./apartment_model.joblib')
+def predict_apartment_price(living_space, number_of_rooms, verbose=False, data_dir=os.environ.get('DATA_DIR', '/root')):
+    model_object = load(f'{data_dir}/apartment_model.joblib')
     X_new = pd.DataFrame([[living_space, number_of_rooms]])
     prediction = model_object.predict(X_new)[0].round(2)
     if verbose is True:

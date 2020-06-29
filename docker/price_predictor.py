@@ -26,7 +26,7 @@ import os
 # print("Test set score: ", str(model.score(X_test_scaled, Y_test)))
 
 
-def prepare_model(verbose=False, data_dir=os.environ.get('DATA_DIR', '/root')):
+def prepare_model(verbose=False, data_dir=os.environ.get('DATA_DIR', '.')):
     from sklearn.model_selection import train_test_split
     dataframe = pd.read_csv(f"{data_dir}/apartments_dataframe.csv")
 
@@ -39,7 +39,7 @@ def prepare_model(verbose=False, data_dir=os.environ.get('DATA_DIR', '/root')):
     return X_train, X_test, Y_train, Y_test
 
 
-def learn_linear_model(X_train, X_test, Y_train, Y_test, verbose=False, data_dir=os.environ.get('DATA_DIR', '/root')):
+def learn_linear_model(X_train, X_test, Y_train, Y_test, verbose=False, data_dir=os.environ.get('DATA_DIR', '.')):
     from sklearn import linear_model
 
     model_object = linear_model.LinearRegression().fit(X_train, Y_train)
@@ -51,7 +51,7 @@ def learn_linear_model(X_train, X_test, Y_train, Y_test, verbose=False, data_dir
     return
 
 
-def predict_apartment_price(living_space, number_of_rooms, verbose=False, data_dir=os.environ.get('DATA_DIR', '/root')):
+def predict_apartment_price(living_space, number_of_rooms, verbose=False, data_dir=os.environ.get('DATA_DIR', '.')):
     model_object = load(f'{data_dir}/apartment_model.joblib')
     X_new = pd.DataFrame([[living_space, number_of_rooms]])
     prediction = model_object.predict(X_new)[0].round(2)

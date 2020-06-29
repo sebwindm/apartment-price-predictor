@@ -4,3 +4,4 @@ venv
 *.joblib
 __pycache__
 .vscode/
+*.csv

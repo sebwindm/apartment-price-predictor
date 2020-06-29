@@ -28,7 +28,7 @@ import os
 
 def prepare_model(verbose=False, data_dir=os.environ.get('DATA_DIR', '/root')):
     from sklearn.model_selection import train_test_split
-    dataframe = pd.read_pickle(f"{data_dir}/apartments_dataframe.pkl")
+    dataframe = pd.read_csv(f"{data_dir}/apartments_dataframe.csv")
 
     y = dataframe['rent']
     X = dataframe[['living_space', 'number_rooms']]

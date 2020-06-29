@@ -6,6 +6,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 import pandas as pd
 import os
+from tqdm import tqdm
 
 
 def scrape_data_from_immoscout(verbose=False, data_dir=os.environ.get('DATA_DIR', '/root')):
@@ -24,7 +25,12 @@ def scrape_data_from_immoscout(verbose=False, data_dir=os.environ.get('DATA_DIR'
 
     list_of_all_offer_data = []
 
-    for results_page in range(number_of_results_pages):
+    if verbose == True:
+        results_pages = tqdm(range(number_of_results_pages))
+    else: 
+        results_pages = range(number_of_results_pages)
+
+    for results_page in results_pages:
 
         new_URL = str(base_URL) + str(results_page + 1)
         page = requests.get(new_URL)
@@ -55,9 +61,6 @@ def scrape_data_from_immoscout(verbose=False, data_dir=os.environ.get('DATA_DIR'
             }
 
             list_of_all_offer_data.append(offer_data)
-        if verbose is True:
-            if results_page % 10 == 0:
-                print("finished page " + str(results_page + 1) + " of " + str(number_of_results_pages))
         time.sleep(0.1)
 
     all_offers_dataframe = pd.DataFrame(list_of_all_offer_data)

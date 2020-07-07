@@ -6,3 +6,4 @@ __pycache__
 .vscode/
 *.csv
 *.txt
+db.sqlite3

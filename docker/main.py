@@ -3,8 +3,7 @@ This package scrapes data from an apartment-finding website and uses the gathere
 of rooms and price to train a machine learning model. The model can then be used to predict the price of an apartment
 by giving a number of rooms and the living space.
 """
-import webscraper, price_predictor
-
+from docker import webscraper, price_predictor
 
 def ask_user():
     user_input = input('Type... '
@@ -20,7 +19,7 @@ if __name__ == '__main__':
     user_input = ask_user()
 
     if user_input == "1":
-        dataframe = webscraper.scrape_data_from_immoscout(verbose=True)
+        webscraper.scrape_data_from_immoscout(verbose=True)
 
     elif user_input == "2":
         X_train, X_test, Y_train, Y_test = price_predictor.prepare_model(verbose=True)

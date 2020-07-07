@@ -7,9 +7,10 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import os
 from tqdm import tqdm
+from docker import database_handler
 
 
-def scrape_data_from_immoscout(verbose=False, data_dir=os.environ.get('DATA_DIR', '/root')):
+def scrape_data_from_immoscout(verbose=False, data_dir=os.environ.get('DATA_DIR', '.')):
     """
     Collect data on apartments from immobilienscout24.de and return the collected data as a Pandas dataframe
     :param verbose: boolean, set True to display console output
@@ -36,23 +37,23 @@ def scrape_data_from_immoscout(verbose=False, data_dir=os.environ.get('DATA_DIR'
         page = requests.get(new_URL)
         soup = BeautifulSoup(page.content, 'html.parser')
         results_list_container = soup.find('ul', id="resultListItems")
-        all_offers = results_list_container.find_all('li', class_="result-list__listing")
+        all_offerings = results_list_container.find_all('li', class_="result-list__listing")
 
-        for offer in all_offers:
-            offer_id = offer['data-id']
-            access_date = datetime.today().strftime('%Y-%m-%d')
+        for offering in all_offerings:
+            offering_id = offering['data-id']
+            access_date = datetime.now().date()
             link_prefix = 'https://www.immobilienscout24.de'
-            offer_link = link_prefix + offer.find('a')['href']
+            offer_link = link_prefix + offering.find('a')['href']
 
-            offer_details = offer.find_all('div', class_="grid grid-flex gutter-horizontal-l gutter-vertical-s")
-            offer_details = offer.find_all('dd', class_="font-nowrap font-highlight font-tabular")
+            offer_details = offering.find_all('div', class_="grid grid-flex gutter-horizontal-l gutter-vertical-s")
+            offer_details = offering.find_all('dd', class_="font-nowrap font-highlight font-tabular")
 
             offer_rent = offer_details[0].text.replace("€", "").replace(".", "").replace(",", ".")
             offer_living_space = offer_details[1].text.replace("m²", "").replace(",", ".")
             offer_number_of_rooms = offer_details[2].find('span', class_="onlyLarge").text.replace(",", ".")
 
-            offer_data = {
-                "offer_id": offer_id,
+            offering_data = {
+                "offering_id": offering_id,
                 "access_date": access_date,
                 "link": offer_link,
                 "rent": offer_rent,
@@ -60,20 +61,32 @@ def scrape_data_from_immoscout(verbose=False, data_dir=os.environ.get('DATA_DIR'
                 "number_rooms": offer_number_of_rooms
             }
 
-            list_of_all_offer_data.append(offer_data)
+            list_of_all_offer_data.append(offering_data)
         time.sleep(0.1)
 
+    # Insert all new offers into the database and get any error messages
+    insertion_error = database_handler.insert_offerings(list_of_all_offer_data)
+    if insertion_error != None:
+        raise ValueError("PostgreSQL error in database_handler.insert_offerings(): ", insertion_error)
+
+    # Delete duplicate rows from the database
+    old_duplicates, new_duplicates, duplicate_deletion_error = database_handler.remove_duplicates()
+    if new_duplicates > 0:
+        raise ValueError("Duplicate deletion in database_handler.remove_duplicates() didn't delete all duplicates")
+    elif duplicate_deletion_error != None:
+        raise ValueError("PostgreSQL error: ", duplicate_deletion_error)
+    elif verbose is True:
+        print("Removed ", old_duplicates/2, " duplicate entries")
+
+    # Deprecated, will be removed soon:
     all_offers_dataframe = pd.DataFrame(list_of_all_offer_data)
     if verbose is True:
         print("Apartment offerings stored: ", str(all_offers_dataframe.shape[0]))
-        # Check for duplicates
-        if all_offers_dataframe[all_offers_dataframe.duplicated(['offer_id'])].empty == False:
-            print("Duplicates found")
-        else:
-            print("No duplicates found")
 
+    # Deprecated, will be removed soon:
     # Save dataframe to disk
-    all_offers_dataframe.to_csv(f"{data_dir}/apartments_dataframe.csv")
-    return all_offers_dataframe
+    # all_offers_dataframe.to_csv(f"{data_dir}/apartments_dataframe.csv")
+    return
 
-
+if __name__ == '__main__':
+    scrape_data_from_immoscout(verbose=True)

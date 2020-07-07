@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <title>Apartment Price Predictor</title>
+  </head>
+  <body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <a class="navbar-brand" href="#">Apartment Price Predictor</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Bla</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Bla</a>
+          </li>
+        </ul>
+        <span class="navbar-text">
+          Navbar text with an inline element
+        </span>
+      </div>
+    </nav>
+
+    <h1>Predict apartment prices</h1>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="city_selector_button">
+              Select city
+            </button>
+            <div class="dropdown-menu" id="city_selector_menu">
+              <a class="dropdown-item" href="#">Berlin</a>
+              <a class="dropdown-item" href="#">Hamburg</a>
+              <a class="dropdown-item" href="#">München</a>
+              <a class="dropdown-item" href="#">Köln</a>
+              <a class="dropdown-item" href="#">Frankfurt</a>
+              <a class="dropdown-item" href="#">Stuttgart</a>
+              <a class="dropdown-item" href="#">Düsseldorf</a>
+              <a class="dropdown-item" href="#">Dortmund</a>
+              <a class="dropdown-item" href="#">Essen</a>
+              <a class="dropdown-item" href="#">Leipzig</a>
+            </div>
+        </div>
+      </div>
+        <div class="col-sm">
+            <form>
+            <div class="form-group">
+              <label for="rooms_slider">Rooms: </label>
+              <span id="rooms_value"></span>
+              <input type="range" class="custom-range" min="1" max="7" step="0.5" id="rooms_slider">
+            </div>
+            <div class="form-group">
+              <label for="living_area_slider">Living area: </label>
+              <span id="living_area_value"></span> <span>m²</span>
+              <input type="range" class="custom-range" min="5" max="200" step="1.0" id="living_area_slider">
+            </div>
+          </form>
+        </div>
+        <div class="col-sm">
+          <button type="button" class="btn btn-primary">Predict rent per month</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <div class="alert alert-primary" role="alert">
+        The predicted rent per month is 1234 €
+      </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <script>
+    // -------------------------
+    // INPUT SLIDERS:
+    // Update the displayed value of the sliders (rooms and living area) when the sliders get moved
+    var rooms_slider = document.getElementById("rooms_slider");
+    var rooms_value = document.getElementById("rooms_value");
+    rooms_slider.value = 2;
+    rooms_value.innerHTML = rooms_slider.value; // Display the default slider value
+
+    var living_area_slider = document.getElementById("living_area_slider");
+    var living_area_value = document.getElementById("living_area_value");
+    living_area_slider.value = 50;
+    living_area_value.innerHTML = living_area_slider.value; // Display the default slider value
+
+    // Update the current slider value (each time you drag the slider handle)
+    rooms_slider.oninput = function() {rooms_value.innerHTML = this.value;}
+    living_area_slider.oninput = function() {living_area_value.innerHTML = this.value;}
+    // -------------------------
+
+    // -------------------------
+    // DROPDOWN MENU:
+    // Update the dopdown menu button text with the selected city
+    var clickHandler = function() {
+      document.getElementById('city_selector_button').innerHTML = event.target.innerHTML;
+    };
+    var dropdown = document.getElementById('city_selector_menu');
+    var filterItem = dropdown.getElementsByTagName('a')
+
+    for (var i = 0; i < filterItem.length; i++) {
+      var current = filterItem[i];
+      current.addEventListener('click', clickHandler, false);
+
+    }
+
+    // -------------------------
+    </script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+</html>

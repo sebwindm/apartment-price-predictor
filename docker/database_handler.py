@@ -7,6 +7,7 @@ def open_connection():
     Open a connection to the remote PostgreSQL database and return connection object
     :return: psycopg2 connection object
     """
+    # If there are problems with the password, see https://www.liquidweb.com/kb/change-a-password-for-postgresql-on-linux-via-command-line/
     f = open("db_info.txt", "r")
     dbname = f.readline()
     username = f.readline()

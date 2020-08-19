@@ -1,6 +1,7 @@
 import pandas as pd
 from joblib import dump, load
 import os
+from docker import database_handler
 # from sklearn.ensemble import RandomForestRegressor
 # model = RandomForestRegressor()
 # model.fit(X_train, Y_train)
@@ -26,9 +27,22 @@ import os
 # print("Test set score: ", str(model.score(X_test_scaled, Y_test)))
 
 
+
+
 def prepare_model(verbose=False, data_dir=os.environ.get('DATA_DIR', '.')):
     from sklearn.model_selection import train_test_split
-    dataframe = pd.read_csv(f"{data_dir}/apartments_dataframe.csv")
+
+    # # Deprecated, will be removed soon:
+    #dataframe = pd.read_csv(f"{data_dir}/apartments_dataframe.csv")
+
+    sql = """ SELECT offering_id, rent, living_space, number_rooms FROM offerings """
+    conn = database_handler.open_connection()
+    dataframe = pd.read_sql_query(sql, conn)
+
+    # Check for duplicates
+    if dataframe[dataframe.duplicated(['offering_id'])].empty == False:
+        raise ValueError("Duplicates found")
+
 
     y = dataframe['rent']
     X = dataframe[['living_space', 'number_rooms']]
@@ -58,3 +72,7 @@ def predict_apartment_price(living_space, number_of_rooms, verbose=False, data_d
     if verbose is True:
         print("\nAn apartment with " + str(number_of_rooms) + " rooms and " + str(living_space) + " m² costs " + str(
             prediction) + " € per month.\n")
+
+
+if __name__ == '__main__':
+    prepare_model()

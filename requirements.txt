@@ -16,3 +16,5 @@ tqdm==4.46.1
 soupsieve==2.0.1
 threadpoolctl==2.1.0
 urllib3==1.25.9
+Django==3.0.8
+psycopg2

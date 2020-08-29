@@ -1,5 +1,7 @@
 # Project overview:
 
+# IMPORTANT: As of August 2020, the web scraper triggers a new captcha check from the real estate platform which I couldn't find a way around so far.
+
 The apartment price predictor scrapes apartment offerings from the web and allows the user to predict the price/rent for an apartment, given certain features like number of rooms and the size of the apartment.
 
 Production ready project components:
